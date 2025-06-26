@@ -4,6 +4,24 @@ using UnityEngine;
 
 public class ReactiveTarget : MonoBehaviour
 {
+    private int score = 0;
+    private void OnEnable()
+    {
+        RayShooter shooter = Camera.main.GetComponent<RayShooter>();
+        if (shooter != null)
+        {
+            shooter.OnRayHit += HandleRayHit;
+        }
+    }
+
+    private void OnDisable()
+    {
+        RayShooter shooter = Camera.main.GetComponent<RayShooter>();
+        if (shooter != null)
+        {
+            shooter.OnRayHit -= HandleRayHit;
+        }
+    }
 
     public void ReactToHit()
     {
@@ -23,4 +41,14 @@ public class ReactiveTarget : MonoBehaviour
 
         Destroy(this.gameObject);
     }
+
+    private void HandleRayHit(GameObject hitObject, Vector3 hitPoint)
+    { 
+        if (hitObject == this.gameObject)
+        {
+            score++;
+            Debug.Log($"Score: {score}");
+        }
+    }
+
 }

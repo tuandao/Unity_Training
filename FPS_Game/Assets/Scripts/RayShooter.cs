@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class RayShooter : MonoBehaviour
 {
+    [SerializeField] AudioSource soundSource;
+    [SerializeField] AudioClip hitWallSound;
+    [SerializeField] AudioClip hitEnemySound;
+
     private Camera cam;
+
+    public delegate void RayHitHandler(GameObject hitObject, Vector3 hitPoint);
+
+    public event RayHitHandler OnRayHit;
 
     void Start()
     {
@@ -18,9 +26,9 @@ public class RayShooter : MonoBehaviour
     {
         int size = 12;
         float posX = cam.pixelWidth / 2 - size / 4;
-        float posY = cam.pixelHeight / 2 - size / 2; 
+        float posY = cam.pixelHeight / 2 - size / 2;
 
-        GUI.Label(new Rect(posX, posY, size, size), "+");
+        GUI.Label(new Rect(posX, posY, size, size), "*");
     }
 
     void Update()
@@ -37,12 +45,14 @@ public class RayShooter : MonoBehaviour
                 if (target != null)
                 {
                     target.ReactToHit();
-                    Debug.Log("Hit: " + hitObject.name);
+                    soundSource.PlayOneShot(hitEnemySound);
                 }
                 else
                 {
                     StartCoroutine(SphereIndicator(hit.point));
+                    soundSource.PlayOneShot(hitWallSound);
                 }
+                OnRayHit?.Invoke(hitObject, hit.point);
             }
         }
     }

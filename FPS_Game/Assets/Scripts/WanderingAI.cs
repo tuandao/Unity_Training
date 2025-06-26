@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class WanderingAI : MonoBehaviour
 {
-    public const float baseSpeed = 3.0f;
-
     public float speed = 3.0f;
     public float obstacleRange = 5.0f;
 
@@ -13,15 +11,6 @@ public class WanderingAI : MonoBehaviour
     private GameObject fireball;
 
     private bool isAlive;
-
-    void OnEnable()
-    {
-        Messenger<float>.AddListener(GameEvent.SPEED_CHANGED, OnSpeedChanged);
-    }
-    void OnDisable()
-    {
-        Messenger<float>.RemoveListener(GameEvent.SPEED_CHANGED, OnSpeedChanged);
-    }
 
     void Start()
     {
@@ -60,10 +49,5 @@ public class WanderingAI : MonoBehaviour
     public void SetAlive(bool alive)
     {
         isAlive = alive;
-    }
-
-    private void OnSpeedChanged(float value)
-    {
-        speed = baseSpeed * value;
     }
 }
